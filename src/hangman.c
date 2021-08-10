@@ -30,6 +30,7 @@ char *randomWord() { //generates a random word from txt file
 	char chosen_word[9895]; //size represents total number of lines
 	char current_word[9895];
 	chosen_word[0] = '\0'; //if no lines then prevents crashing
+	int max = 1.0;
 
 	//reading in file with words to choose from
 	word_list = fopen("10000-most-common-eng-words.txt", "r");
@@ -39,7 +40,7 @@ char *randomWord() { //generates a random word from txt file
     }
 
     while(fgets(current_word, sizeof(current_word), word_list)) { //while there are still lines to read
-    	if(((float)rand()/(float)(RAND_MAX)) < 1.0 / ++line_no) { // odds of word being replaced given a random double
+    	if( (double)rand()/ ((RAND_MAX) / max) < 1.0 / ++line_no) { // odds of word being replaced given a random double
     		strcpy(chosen_word, current_word); //replace with new word
     	}
     }
@@ -114,6 +115,8 @@ void run_game() {
 }//end of run_game
 
 int main() {
+
+	srand(time(NULL)); //SEEDING RAND FUNCTION WIT A UNIQUE NO, IF YOU TAKE THIS OUT YOU WILL SPEND ANOTHER 2 HOURS WONDERING WHY YOURE GETTING THE SAME WORD EVERY TIME
 	randomWord();
 
 	return 0;
