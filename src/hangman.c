@@ -52,9 +52,6 @@ char *randomWord() { //generates a random word from txt file
 }
 
 int runGame() {
-
-	printf("hey\n");
-
 	int game_over = 0;
 	int man_hung = 0;
 	//int rand_word_len;
@@ -70,12 +67,15 @@ int runGame() {
 		strcpy(rand_word, word_copy);
 		while(man_hung < 10) {
 			printf("Enter your guess (single letters only): \n");
+			fflush(stdout);
 			scanf("%c", &player_guess); // avoids reading in new lines
+			printf("\n");
 			man_hung += 1;
 			int a = 0;
 			while(guesses_made[a]) { //for every value in array
 				if(guesses_made[a] == player_guess) { //see if guess has already been made
 					printf("You've already made that guess. Try something different...\n");
+					fflush(stdout);
 					break;
 				}
 				++a;
@@ -104,9 +104,13 @@ int runGame() {
 
 			if(!match) {
 				printf("Sorry wrong guess, try again\n");
+				fflush(stdout);
+				match = 0;
 			}
 			else {
-				printf("Correct guess!");
+				printf("Correct guess!\n");
+				fflush(stdout);
+				match = 0;
 			}
 
 			if(rand_word[0] != 0) { //if element is not 'empty'
@@ -116,9 +120,12 @@ int runGame() {
 			}
 			else {
 				printf("Well done,you won!");
+				fflush(stdout);
 			}
             printf("The word was %s \n", word_copy);
+            fflush(stdout);
             free(word_copy);
+
           	game_over = 1;
            	break;
 
@@ -132,7 +139,7 @@ int runGame() {
 int main(void) {
 	srand(time(NULL)); //SEEDING RAND FUNCTION WIT A UNIQUE NO, IF YOU TAKE THIS OUT YOU WILL SPEND ANOTHER 2 HOURS WONDERING WHY YOURE GETTING THE SAME WORD EVERY TIME
 
-	randomWord();
+	//randomWord();
 	//printf("uh\n");
 	runGame();
 
