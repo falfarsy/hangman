@@ -61,14 +61,15 @@ int runGame() {
 	char *word_copy = NULL;
 
 	printf("running game...\n");
+	fflush(stdout);
 
 	while(!game_over) {
 		word_copy = randomWord(); //assign memory allocation
 		strcpy(rand_word, word_copy);
 		while(man_hung < 10) {
-			printf("Enter your guess (single letters only): \n");
+			printf("Enter your guess (single letters only):\n");
 			fflush(stdout);
-			scanf("%c", &player_guess); // avoids reading in new lines
+			scanf(" %c", &player_guess); // avoids reading in new lines
 			printf("\n");
 			man_hung += 1;
 			int a = 0;
@@ -103,12 +104,12 @@ int runGame() {
 			} //end of while
 
 			if(!match) {
-				printf("Sorry wrong guess, try again\n");
+				printf("Sorry wrong guess, try again\n\n");
 				fflush(stdout);
 				match = 0;
 			}
 			else {
-				printf("Correct guess!\n");
+				printf("Correct guess! What's your next guess?\n");
 				fflush(stdout);
 				match = 0;
 			}
@@ -119,7 +120,7 @@ int runGame() {
 				}
 			}
 			else {
-				printf("Well done,you won!");
+				printf("Well done,you won!\n");
 				fflush(stdout);
 			}
             printf("The word was %s \n", word_copy);
