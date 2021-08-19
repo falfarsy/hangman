@@ -39,14 +39,8 @@ char *randomWord() { //generates a random word from txt file
     fclose(word_list); //close file
     chosen_word[strcspn(chosen_word, "\n")] = 0;//remove newline
 
-
-//    select_len = strlen(chosen_word); //get word length of random chosen word
-//    if(select_len > 0 && chosen_word[select_len - 1] == '\n') { //if chosen word if a new line
-//    	chosen_word[select_len - 1] = '\0'; //then replace with null value
-//    }
-
-    printf("%s\n", chosen_word);
-    printf("\n");
+    //printf ( "%s\n", chosen_word);
+    //printf ( "\n");
 
     return strdup(chosen_word);
 }
@@ -54,27 +48,46 @@ char *randomWord() { //generates a random word from txt file
 int runGame() {
 	int game_over = 0;
 	int man_hung = 0;
-	//int rand_word_len;
-	char guesses_made[11] = "";
+	char guesses_made[maxLen] = "";
 	char player_guess = 0;
 	char rand_word[maxLen] = "";
 	char *word_copy = NULL;
+	char correct_guesses[15] = "";
+	char wrong_guesses[11] = "";
+	int w = 0;
+	int r = 0;
 
-	printf("running game...\n");
+
+	printf("Lets play Hangman!\n");
+	fflush(stdout);
+	printf("You have 10 lives which wil1 decrease each time you guess incorrectly.\n\n");
 	fflush(stdout);
 
 	while(!game_over) {
 		word_copy = randomWord(); //assign memory allocation
 		strcpy(rand_word, word_copy);
 		while(man_hung < 10) {
+			printf("You have correctly guessed: ");
+		    for (int i = 0; i < 15; ++i) {
+		        printf("%c, ", correct_guesses[i]);
+		    }
+		    printf("\n");
+			printf("You have incorrectly guessed: ");
+		    for (int i = 0; i < 10; ++i) {
+		        printf("%c, ", wrong_guesses[i]);
+		    }
+		    printf("\n");
+
+
 			printf("Enter your guess (single letters only):\n");
 			fflush(stdout);
 			scanf(" %c", &player_guess); // avoids reading in new lines
 			printf("\n");
-			man_hung += 1;
 			int a = 0;
+			int match = 0;
 			while(guesses_made[a]) { //for every value in array
 				if(guesses_made[a] == player_guess) { //see if guess has already been made
+					match = 3;
 					printf("You've already made that guess. Try something different...\n");
 					fflush(stdout);
 					break;
@@ -88,7 +101,6 @@ int runGame() {
 
 			//iterate through random word array to see if letter exists in word
 			int b = 0;
-			int match = 0;
 			while(rand_word[b]) { //not terminating zero
 				if(rand_word[b] == player_guess) {
 					match = 1; //found
@@ -103,19 +115,29 @@ int runGame() {
 				++b;
 			} //end of while
 
-			if(!match) {
-				printf("Sorry wrong guess, try again\n\n");
+			if(match == 0) {
+				printf("Sorry wrong guess, try again!\n\n");
 				fflush(stdout);
-				match = 0;
+				if(!wrong_guesses[w]) { //terminating zero
+					wrong_guesses[w] = player_guess; //add player guess
+					wrong_guesses[w+1] = 0; //terminate
+				}
+				++w;
+				man_hung += 1;
 			}
-			else {
-				printf("Correct guess! What's your next guess?\n");
+			else if(match == 1) {
+				printf("Correct guess!\n\n");
 				fflush(stdout);
-				match = 0;
+				if(!correct_guesses[r]) { //terminating zero
+					correct_guesses[r] = player_guess; //add player guess
+					correct_guesses[r+1] = 0; //terminate
+				}
+				++r;
 			}
 
 			if(rand_word[0] != 0) { //if element is not 'empty'
 				if(10 > man_hung) {
+					match = 0;
 					continue; //ask for another input
 				}
 			}
@@ -140,11 +162,7 @@ int runGame() {
 int main(void) {
 	srand(time(NULL)); //SEEDING RAND FUNCTION WIT A UNIQUE NO, IF YOU TAKE THIS OUT YOU WILL SPEND ANOTHER 2 HOURS WONDERING WHY YOURE GETTING THE SAME WORD EVERY TIME
 
-	//randomWord();
-	//printf("uh\n");
 	runGame();
-
-	//printf("yes\n");
 
 	return 0;
 }
